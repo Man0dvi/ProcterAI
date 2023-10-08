@@ -27,10 +27,10 @@ for user_id_folder in os.listdir(encodings_dir):
         if encoding_filename.startswith("encoding_") and encoding_filename.endswith(".npy"):
             encoding_path = os.path.join(encodings_dir, user_id_folder, encoding_filename)
             encoding = np.load(encoding_path)
-            stored_encodings[user_id].append(encoding)
+            stored_encodings[user_id].append(encoding[0])
 
 for user_id in stored_encodings:
-    stored_encodings[user_id] = np.array(stored_encodings[user_id])
+    stored_encodings[user_id] = stored_encodings[user_id]
 
 
 def dlib_detector(img):
