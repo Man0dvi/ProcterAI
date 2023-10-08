@@ -2,14 +2,39 @@ import cv2
 from preprocessing import preprocess_image
 from data_labelling import labelling_data
 from data_splitting import split_data
+from alignment import align_faces
+import os
+
+data_folder = "data/"
+existing_user_ids = set()
+for filename in os.listdir(data_folder):
+    if filename.startswith("user.") and filename.endswith(".jpg"):
+        user_id = int(filename.split(".")[1])
+        existing_user_ids.add(user_id)
+
+next_user_id = 1
+while next_user_id in existing_user_ids:
+    next_user_id += 1
 
 
-user_id = 1
+existing_img_ids = set()
+for filename in os.listdir(data_folder):
+    if filename.startswith("user.") and filename.endswith(".jpg"):
+        user_id = int(filename.split(".")[2])
+        existing_img_ids.add(user_id)
+
+next_img_id = 1
+while next_img_id in existing_img_ids:
+    next_img_id += 1
+
+print("Starting to store images for user", next_user_id)
+user_id = next_user_id
+img_count_per_user = 0
+prev_user_id = user_id
 # Method to generate dataset to recognize a person
 
 
 def generate_dataset(img, id, img_id):
-
     preprocessed_img = preprocess_image(img)
     # write image in data dir
     cv2.imwrite("data/user."+str(id)+"."+str(img_id)+".jpg", preprocessed_img*255)
@@ -38,12 +63,18 @@ def detect(img, faceCascade, img_id):
     if len(coords)==4:
         # Updating region of interest by cropping image
         roi_img = img[coords[1]:coords[1]+coords[3], coords[0]:coords[0]+coords[2]]
-        # Assign unique id to each user
+        aligned_faces = align_faces([roi_img])  # Align the detected face
+        if len(aligned_faces) > 0:
+            # Assuming we're aligning a single face at a time
+            aligned_face = aligned_faces[0]
+            # Updating region of interest by cropping image
+            roi_img = aligned_face
 
+        return roi_img, True
         # img_id to make the name of each image unique
-        generate_dataset(roi_img, user_id, img_id)
-
-    return img
+        # generate_dataset(roi_img, user_id, img_id)
+    else:
+        return img, False
 
 
 # Loading classifiers
@@ -54,21 +85,36 @@ faceCascade = cv2.CascadeClassifier('frontalface.xml')
 video_capture = cv2.VideoCapture(0)
 
 # Initialize img_id with 0
-img_id = 0
-
+img_id = next_img_id
 while True:
-    if img_id % 50 == 0:
-        print("Collected ", img_id," images")
-    # Reading image from video stream
     _, img = video_capture.read()
-    # Call method we defined above
 
-    img = detect(img, faceCascade, img_id)
-    # Writing processed image in a new window
+    img, face_detected = detect(img, faceCascade, img_id)
+
+    # Increment img_id only when a face is detected and image is stored
+    if face_detected:
+
+        if img_count_per_user < 20:
+            key = cv2.waitKey(0)
+            print("Press 's' to store next image...")
+            if key == ord('s'):
+                generate_dataset(img, user_id, img_id)
+                img_count_per_user += 1
+                img_id += 1
+        if img_count_per_user >= 20:
+            print("Stored", img_count_per_user, "images for user", user_id)
+            print("Press 'n' to store images for the next user...")
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+            while cv2.waitKey(1) & 0xFF != ord('n'):
+                if cv2.waitKey(1) & 0xFF == ord('q'):
+                    break
+                pass
+            user_id += 1
+            img_count_per_user = 0
+
     cv2.imshow("face detection", img)
-    img_id += 1
-    if cv2.waitKey(1) & 0xFF == ord('n'):
-        user_id = user_id+1
+
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
 
@@ -77,11 +123,6 @@ data_folder = "data/"
 max_images_per_user = 20
 a, b, _, _ = labelling_data(data_folder, max_images_per_user)
 x_train, x_test, y_train, y_test = split_data(a, b)
-
-# Print the shape of the resulting datasets to verify the split
-# print("Training data shape - Features:", x_train.shape, " Labels:", y_train.shape)
-# print("Testing data shape - Features:", x_test.shape, " Labels:", y_test.shape)
-
 
 # releasing web-cam
 video_capture.release()
