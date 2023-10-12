@@ -67,7 +67,7 @@ def detect(img, faceCascade, img_id):
         if len(aligned_faces) > 0:
             # Assuming we're aligning a single face at a time
             aligned_face = aligned_faces[0]
-            # Updating region of interest by cropping image
+            # Updating region of inte rest by cropping image
             roi_img = aligned_face
 
         return roi_img, True
