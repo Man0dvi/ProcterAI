@@ -45,18 +45,52 @@ def extract_user_image_ids(filename):
         return None, None
 
 
+# Initialize variables to keep track of the previous user ID and its folder
+user_ids = set()
 
-user_image_count = {}
+for subdir in os.listdir(encodings_dir):
+    if subdir.startswith("user_"):
+        user_id = int(subdir.split("_")[1])
+        user_ids.add(user_id)
 
-for filename in os.listdir(aligned_faces_dir):
-    if filename.endswith(".jpg"):
+# Find the next available user ID
+next_user_id = 1
+while next_user_id in user_ids:
+    next_user_id += 1
+
+print("Next available user ID:", next_user_id)
+
+
+existing_img_ids = []
+# Create the user directory for the next available user
+user_dir = os.path.join(encodings_dir, f"user_{next_user_id}")
+os.makedirs(user_dir, exist_ok=True)
+print("Saving encodings to:", user_dir)
+
+user_dir_prev = os.path.join(encodings_dir, f"user_{next_user_id-1}")
+
+# Collect existing image IDs for the next_user_id
+# user_dir = os.path.join(encodings_dir, f"user_{next_user_id}")
+for subdir in os.listdir(user_dir_prev):
+    if subdir.startswith("encoding_") and subdir.endswith(".npy"):
+        img_id = int(subdir.split("_")[1].split(".")[0])
+        existing_img_ids.append(img_id)
+
+# Find the next available image ID
+next_img_id = max(existing_img_ids) + 1 if existing_img_ids else 1
+
+print("Next available image ID for user", next_user_id, ":", next_img_id)
+
+sorted_filenames = sorted(os.listdir(aligned_faces_dir), key=lambda x: (int(x.split('.')[1]), int(x.split('.')[2])))
+
+starting_filename = f"user.{next_user_id}.{next_img_id}.jpg"
+
+
+for filename in sorted_filenames:
+    user_id, img_id = extract_user_image_ids(filename)
+    if user_id >= next_user_id and filename.endswith(".jpg"):
         # Extract user ID and image ID from the filename
-        user_id, img_id = extract_user_image_ids(filename)
-
         if user_id is not None and img_id is not None:
-            # Update the image count for this user
-            user_image_count[user_id] = user_image_count.get(user_id, 0) + 1
-
             # Load the image
             face_image = cv2.imread(os.path.join(aligned_faces_dir, filename))
 
@@ -65,21 +99,14 @@ for filename in os.listdir(aligned_faces_dir):
 
             # Ensure that face_locations is not empty before calling encodings
             if face_locations:
-                # Call the encodings function for each image until image count reaches 20
-                if user_image_count[user_id] <= 20:
-                    # Call the encodings function
-                    face_encodings = encodings(face_image, face_locations, pose_predictor, face_encoder)
 
-                    # Create a directory for each user if it doesn't exist
-                    user_dir = os.path.join(encodings_dir, f"user_{user_id}")
-                    os.makedirs(user_dir, exist_ok=True)
+                # Generate a new encoding filename for this image
+                encoding_filename = f"encoding_{img_id}.npy"
+                encoding_file = os.path.join(user_dir, encoding_filename)
 
-                    # Save the encodings for this user and image
-                    encoding_filename = f"encoding_{img_id}.npy"
-                    encoding_path = os.path.join(user_dir, encoding_filename)
-                    np.save(encoding_path, face_encodings)
-
-                    print(f"Encoding saved for user {user_id}, image {img_id}.")
+                # Save the encodings for this user and image
+                np.save(encoding_file, encodings(face_image, face_locations, pose_predictor, face_encoder))
+                print(f"Encoding saved for user {user_id}, image {img_id}.")
 
             else:
                 print(f"No faces found in the image for user {user_id}.")
@@ -87,3 +114,7 @@ for filename in os.listdir(aligned_faces_dir):
         else:
             print("Invalid filename format: ", filename)
 
+        next_img_id += 1
+
+    # elif filename > starting_filename and not filename.endswith(".jpg"):
+    #     break
