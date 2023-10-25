@@ -3,7 +3,7 @@ import numpy as np
 import cv2
 from preprocessing import preprocess_image
 
-def labelling_data(data_folder="data/", max_images_per_user=20):
+def labelling_data(data_folder="C:\\Users\\mandv\\PycharmProjects\\AutomatedAttendace\\ProcterAI\\data", max_images_per_user=20):
     a = []  # Training images
     b = []  # Training labels
 
@@ -61,7 +61,7 @@ def labelling_data(data_folder="data/", max_images_per_user=20):
 
 
 # Usage example
-data_folder = "data/"  # Modify this path as needed
+data_folder = r"C:\Users\mandv\PycharmProjects\AutomatedAttendace\ProcterAI\data"  # Modify this path as needed
 max_images_per_user = 20  # Modify this value as needed
 a, b, classes, image_count_per_user = labelling_data(data_folder, max_images_per_user)
 

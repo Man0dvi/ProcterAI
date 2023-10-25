@@ -2,7 +2,7 @@ from sklearn.model_selection import train_test_split
 from data_labelling import labelling_data
 
 
-data_folder = "data/"
+data_folder = r"C:\Users\mandv\PycharmProjects\AutomatedAttendace\ProcterAI\data"
 max_images_per_user = 20
 a, b, _, _ = labelling_data(data_folder, max_images_per_user)
 

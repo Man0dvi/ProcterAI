@@ -5,7 +5,7 @@ from data_splitting import split_data
 from alignment import align_faces
 import os
 
-data_folder = "data/"
+data_folder = r"C:\Users\mandv\PycharmProjects\AutomatedAttendace\ProcterAI\data"
 existing_user_ids = set()
 for filename in os.listdir(data_folder):
     if filename.startswith("user.") and filename.endswith(".jpg"):
@@ -113,7 +113,13 @@ while True:
             user_id += 1
             img_count_per_user = 0
 
-    cv2.imshow("face detection", img)
+    cv2.namedWindow("Camera Feed", cv2.WINDOW_NORMAL)
+    screen_width, screen_height = 1920, 1080  # Set your screen resolution
+    window_width, window_height = 640, 480  # Set your window size
+    x = (screen_width - window_width) // 2
+    y = (screen_height - window_height) // 2
+    cv2.moveWindow("Camera Feed", x, y)
+    cv2.imshow("Camera Feed", img)
 
     if cv2.waitKey(1) & 0xFF == ord('q'):
         break
