@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Teacher Interface</title>
+</head>
+<body>
+  <div class="container">
+    <h1>Teacher Interface</h1>
+    <button id="markAttendanceButton">Mark Attendance</button>
+    <button id="viewPresentUsersButton">View Present Users</button>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+      $(document).ready(function() {
+        // Trigger real_time.py to mark attendance
+        $('#markAttendanceButton').click(function() {
+          $.post('/mark_attendance', function(data) {
+            alert(data); // Display a message when attendance is marked
+          });
+        });
+      });
+    </script>
+  </div>
+</body>
+</html>
