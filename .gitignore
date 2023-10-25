@@ -3,3 +3,4 @@ __pycache__/
 venv/
 detected_faces/
 data/
+mysql-installer-community-8.0.34.0.msi
