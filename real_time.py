@@ -3,6 +3,7 @@ import dlib
 import os
 import numpy as np
 from alignment import align_faces
+import mysql.connector
 
 encodings_dir = "encodings"
 detected_faces_dir = "detected_faces"
@@ -28,7 +29,6 @@ def draw_boundary(img, classifier, scaleFactor, minNeighbors, color, text):
         coords_list.append(coords)  # Accumulate coordinates for all detected faces
 
     return coords_list
-
 
 
 # Method to detect the features
@@ -88,16 +88,18 @@ for user_id in stored_encodings:
 
 
 
-def save_detected_faces(images, face_locations):
-    for i, face_location in enumerate(face_locations):
-        top, right, bottom, left = face_location.top(), face_location.right(), face_location.bottom(), face_location.left()
-        # Access the correct ROI image using the index i
-        roi_img = images[i]
-        face_image = roi_img[top:bottom, left:right]
-        cv2.imwrite(f"{detected_faces_dir}/detected{i + 1}.jpg", face_image)
+# def save_detected_faces(images, face_locations):
+#     for i, face_location in enumerate(face_locations):
+#         top, right, bottom, left = face_location.top(), face_location.right(), face_location.bottom(), face_location.left()
+#         # Access the correct ROI image using the index i
+#         roi_img = images[i]
+#         face_image = roi_img[top:bottom, left:right]
+#         cv2.imwrite(f"{detected_faces_dir}/detected{i + 1}.jpg", face_image)
+
 
 
 def calculate_recognized_users(detected_face_encodings):
+
     recognized_faces = []
     for detected_face_name, detected_encoding in detected_face_encodings.items():
         min_distance = float('inf')
@@ -139,8 +141,8 @@ os.makedirs(detected_faces_dir, exist_ok=True)
 video_capture = cv2.VideoCapture(0)
 
 # Initialize a flag to determine when to stop processing faces
-save_faces = True
-
+# save_faces = True
+recognise=[]
 # Initialize a dictionary to store encodings for each detected face
 detected_face_encodings = {}
 
@@ -153,11 +155,14 @@ while True:
         face_locations = dlib_detector([roi_img])  # Pass a list containing the current ROI image
 
         print(f"Number of detected faces in ROI {i + 1}: {len(face_locations)}")
+        # for face_location in face_locations:
+        #     top, right, bottom, left = face_location.top(), face_location.right(), face_location.bottom(),face_location.left()
+        #     cv2.rectangle(roi_img, (left, top), (right, bottom), (0, 255, 0), 2)
+        #
+        # cv2.imshow(f"ROI {i + 1}", roi_img)
 
-        cv2.imshow(f"ROI {i + 1}", roi_img)
-
-        if len(face_locations) > 0 and save_faces:
-            save_detected_faces([roi_img], face_locations)  # Pass a list containing the current ROI image
+        if len(face_locations) > 0:
+            # save_detected_faces([roi_img], face_locations)  # Pass a list containing the current ROI image
 
             # Iterate through each detected face
             for j, face_location in enumerate(face_locations):
@@ -188,6 +193,7 @@ while True:
                         recognized_faces.extend(recognized_faces_for_face)
 
         # save_faces = False  # Stop saving faces after this frame
+    recognise = recognized_faces
     print("Detected face encodings:")
     for key, encoding in detected_face_encodings.items():
         print(f"{key}: {encoding}")
@@ -199,8 +205,7 @@ while True:
             f"Detected face: {face_info['detected_face']}, Recognized user: {face_info['recognized_user']}, Distance: {face_info['distance']}")
 
     break
-    # if cv2.waitKey(1) & 0xFF == ord('q'):
-    #         break
+
 
 # releasing web-cam
 video_capture.release()

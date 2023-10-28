@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Signup/login</title>
+    <style>
+        body, html {
+            height: 90%;
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+<!--            background: linear-gradient(to bottom right, #eee6e8, #ffffff); /* Gradient background from darker to lighter shade */-->
+        background-color: #5c6bc0;
+        }
+
+        .container {
+            width: 1000px;
+            height: 500px;
+            display: flex;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 1);
+        }
+
+        .form-container {
+            width: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 20px;
+            color: #333;
+        }
+
+        .form-container h1 {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: #5c6bc0;
+        }
+
+        .form-container span {
+            font-size: 16px;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        .form-container a {
+            color: #fff;
+            background-color: #5c6bc0;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        .form-container a:hover {
+            background-color: #32408f;
+        }
+    </style>
+    <link rel="stylesheet" href="form.css">
+</head>
+<body>
+<!-- Animated Wave Background  -->
+    <div class="ocean">
+        <div class="wave"></div>
+        <div class="wave"></div>
+    </div>
+    <!-- Log In Form Section -->
+    <section>
+        <div class="container" id="container">
+            <div class="form-container sign-up-container">
+                <form action="#">
+                    <h1>TEACHER</h1>
+                    <span>Click below to take attendance</span>
+                    <br></br>
+                    <a href="/teacher">Sign in</a>
+                </form>
+            </div>
+            <div class="form-container sign-in-container">
+                <form action="#">
+                    <h1>STUDENT</h1>
+                    <span>Click below to register</span>
+                    <br></br>
+                    <a href="/student" >Register</a>
+                </form>
+            </div>
+            <div class="form-container sign-in-container">
+                <form action="#">
+                    <h1>STUDENT</h1>
+                    <span>Click below to login</span>
+                    <br></br>
+                     <a href="/login" >Login</a>
+                </form>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

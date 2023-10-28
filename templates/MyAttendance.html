@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Attendance</title>
+</head>
+<body>
+    <h1>My Attendance</h1>
+    <p>Student Name: {{ student[1] }}</p>
+    <p>Student ID Number: {{ student[2] }}</p>
+    <table border="1">
+        <tr>
+            <th>Recognition Date</th>
+        </tr>
+        {% for record in student_attendance %}
+        <tr>
+            <td>{{ record[0] }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

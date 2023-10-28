@@ -67,7 +67,7 @@ user_dir = os.path.join(encodings_dir, f"user_{next_user_id}")
 os.makedirs(user_dir, exist_ok=True)
 print("Saving encodings to:", user_dir)
 
-user_dir_prev = os.path.join(encodings_dir, f"user_{next_user_id-1}")
+user_dir_prev = os.path.join(encodings_dir, f"user_{next_user_id}")
 
 # Collect existing image IDs for the next_user_id
 # user_dir = os.path.join(encodings_dir, f"user_{next_user_id}")

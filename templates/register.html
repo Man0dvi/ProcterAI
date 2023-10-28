@@ -5,11 +5,101 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Student Registration</title>
   <link rel="stylesheet" href="C:\Users\mandv\PycharmProjects\AutomatedAttendace\ProcterAI\student_registration_system\script.js">
+ <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 110vh;
+      margin: 10;
+      font-family: Arial, sans-serif;
+      background-color: #5c6bc0;
+    }
+
+    .container {
+      width: 60%;
+      text-align: center;
+      background-color: #ffffff;
+      padding: 30px;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    h1 {
+      color: #333;
+      margin-bottom: 2px;
+    }
+
+    form {
+      width: 85%;
+      text-align: left;
+      margin-bottom: 10px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 1px;
+      font-weight: bold;
+    }
+
+    input {
+      width: calc(100% - 20px);
+      padding: 10px;
+      margin-bottom: 10px;
+      border-radius: 5px;
+      border: 1px solid #ddd;
+    }
+
+    #instruction-box {
+      text-align: left;
+      width: 90%;
+      margin-bottom: 20px;
+    }
+
+    #instruction-box h2 {
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    #instruction-box ul {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    #instruction-box li {
+      margin-bottom: 10px;
+    }
+
+    #video {
+      width: 100%;
+      height: auto;
+      margin-top: 20px;
+    }
+
+    button {
+      width: 60%;
+      padding: 10px 20px;
+      margin-top: 20px;
+      font-size: 16px;
+      cursor: pointer;
+      background-color: #4CAF50;
+      color: #ffffff;
+      border: none;
+      border-radius: 4px;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+  </style>
 </head>
 <body>
   <div class="container">
     <h1>Student Registration</h1>
-    <form id="registrationForm" action="/" method="POST">
+    <form id="registrationForm" action="/student" method="POST">
 
       <label for="studentName">Name:</label>
       <input type="text" id="studentName" name="studentName" required>
@@ -19,48 +109,62 @@
 
       <label for="password">Password:</label>
       <input type="text" id="password" name="password" required>
+
+        <button id="saveButton" type="submit">Save Student Info</button>
     </form>
 
-    <!-- Add this div for instructions -->
-   <div id="instruction-box">
-        <h2>Instructions:</h2>
-        <ul>
-            <li>Fill the details(your name, id and password) first.</li>
-            <li>Click on 'Start Scan' button to start scanning your face.</li>
-            <li>Keep your face in front of teh camera and sit in a well lit room.</li>
-            <li>Press 's' to capture an image when your face is properly aligned.</li>
-            <li>For every next picture, move your face slightly to the left and right for different angles.</li>
-            <li>Make sure to capture 20 images in total for accurate recognition.</li>
-            <li>Once done, click on 'Finish' button</li>
-            <!-- Add more instructions as needed -->
-        </ul>
-   </div>
 
-    <video id="video" width="640" height="480" autoplay></video>
-    <button id="runTrainingButton">Run Training</button>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-    $(document).ready(function() {
-        $('#runTrainingButton').click(function() {
-            $.post('/run_training', function(data) {
-                alert(data); // Display a message when the script has executed
+        <!-- Add this div for instructions -->
+       <div id="instruction-box">
+            <h2>Instructions:</h2>
+            <ul>
+                <li>1) Fill the details(your name, id and password) first.</li>
+
+                <li>2) Click on 'Start Scan' button to start scanning your face.</li>
+
+                <li>3) Keep your face in front of the camera and sit in a well lit room.</li>
+
+                <li>4) Press 's' to capture an image when your face is properly aligned.</li>
+
+                <li>5) For every next picture, move your face slightly to the left and right for different angles.</li>
+
+                <li>6) Make sure to capture 20 images in total for accurate recognition.</li>
+
+                <li>7) Once done, click on 'Finish' button</li>
+
+                <li>8) After getting the message "You are registered", Click on 'Save Student' button</li>
+                <!-- Add more instructions as needed -->
+            </ul>
+       </div>
+
+<!--        <video id="video" width="640" height="80" autoplay></video>-->
+        <button id="runTrainingButton">Store 20 images</button>
+
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+        $(document).ready(function() {
+            $('#runTrainingButton').click(function() {
+                $.post('/run_training', function(data) {
+                    alert(data); // Display a message when the script has executed
+                });
             });
         });
-    });
-    </script>
-    <button id="finishScan">Finish</button>
+        </script>
+        <button id="finishScan">Finish</button>
 
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-    $(document).ready(function() {
-        $('#finishScan').click(function() {
-            $.post('/finish', function(data) {
-                alert(data); // Display a message when the script has executed
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+        $(document).ready(function() {
+            $('#finishScan').click(function() {
+                $.post('/finish', function(data) {
+                    alert(data); // Display a message when the script has executed
+                });
             });
         });
-    });
-    </script>
+        </script>
+
+
   </div>
 
 <script src="C:\Users\mandv\PycharmProjects\AutomatedAttendace\ProcterAI\student_registration_system\script.js"></script>
