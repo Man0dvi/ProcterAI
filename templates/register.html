@@ -4,142 +4,68 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Student Registration</title>
-  <link rel="stylesheet" href="C:\Users\mandv\PycharmProjects\AutomatedAttendace\ProcterAI\student_registration_system\script.js">
- <style>
-    body {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 110vh;
-      margin: 10;
-      font-family: Arial, sans-serif;
-      background-color: #5c6bc0;
+  <link rel="stylesheet" href="{{ url_for('static', filename='register.css') }}">
+
+  <link rel="stylesheet" href="register.css">
+  <style>
+
+    #instruction-box {
+        display: none;
     }
 
-    .container {
-      width: 60%;
-      text-align: center;
-      background-color: #ffffff;
-      padding: 30px;
-      border-radius: 5px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    h1 {
-      color: #333;
-      margin-bottom: 2px;
-    }
-
-    form {
-      width: 85%;
-      text-align: left;
-      margin-bottom: 10px;
-    }
 
     label {
-      display: block;
-      margin-bottom: 1px;
-      font-weight: bold;
+      display: inline-block;
+      width: 150px;
+      text-align: right;
+      margin-right: 10px;
     }
 
     input {
-      width: calc(100% - 20px);
-      padding: 10px;
-      margin-bottom: 10px;
-      border-radius: 5px;
-      border: 1px solid #ddd;
-    }
-
-    #instruction-box {
-      text-align: left;
-      width: 90%;
-      margin-bottom: 20px;
-    }
-
-    #instruction-box h2 {
-      color: #333;
-      margin-bottom: 10px;
-    }
-
-    #instruction-box ul {
-      list-style-type: none;
-      padding: 0;
-    }
-
-    #instruction-box li {
-      margin-bottom: 10px;
-    }
-
-    #video {
-      width: 100%;
-      height: auto;
-      margin-top: 20px;
-    }
-
-    button {
-      width: 60%;
-      padding: 10px 20px;
-      margin-top: 20px;
-      font-size: 16px;
-      cursor: pointer;
-      background-color: #4CAF50;
-      color: #ffffff;
-      border: none;
-      border-radius: 4px;
-    }
-
-    button:hover {
-      background-color: #45a049;
+      width: 250px;
+      padding: 5px;
     }
   </style>
+{% include 'header.html' %}
 </head>
 <body>
-  <div class="container">
-    <h1>Student Registration</h1>
-    <form id="registrationForm" action="/student" method="POST">
-
-      <label for="studentName">Name:</label>
-      <input type="text" id="studentName" name="studentName" required>
-
-      <label for="studentID">Student ID:</label>
-      <input type="text" id="studentID" name="studentID" required>
-
-      <label for="password">Password:</label>
-      <input type="text" id="password" name="password" required>
-
-        <button id="saveButton" type="submit">Save Student Info</button>
-    </form>
+    <div class="ocean">
+        <div class="wave"></div>
+        <div class="wave"></div>
+    </div>
+ <!-- Log In Form Section -->
+    <div class="heading" id="heading">
+      <h1>Student Registration</h1>
+    </div>
+<section>
+    <div class="container" id="container">
+        <div class="form-container">
 
 
 
-        <!-- Add this div for instructions -->
-       <div id="instruction-box">
-            <h2>Instructions:</h2>
-            <ul>
-                <li>1) Fill the details(your name, id and password) first.</li>
+ <button id="instructionsButton" class="button-link">Instructions</button><br><br>
 
-                <li>2) Click on 'Start Scan' button to start scanning your face.</li>
+    <div class="instruction-box" id="instruction-box">
+      <h2>Instructions:</h2>
 
-                <li>3) Keep your face in front of the camera and sit in a well lit room.</li>
 
-                <li>4) Press 's' to capture an image when your face is properly aligned.</li>
+          <p>Click on 'Scan' button to start scanning your face.</p>
+          <p>Keep your face in front of the camera and sit in a well-lit room.</p>
+          <p>Press 's' to capture an image when your face is properly aligned.</p>
+          <p>For every next picture, move your face slightly to the left and right for different angles.</p>
+          <p>Make sure to capture 20 images in total for accurate recognition.</p>
+          <p>Once done, click on 'Finish' button</p>
+          <p>Fill the details (your name, id, and password)</p>
+          <p>Finally, click on Save Info</p>
+          <!-- Add more instructions as needed -->
 
-                <li>5) For every next picture, move your face slightly to the left and right for different angles.</li>
-
-                <li>6) Make sure to capture 20 images in total for accurate recognition.</li>
-
-                <li>7) Once done, click on 'Finish' button</li>
-
-                <li>8) After getting the message "You are registered", Click on 'Save Student' button</li>
-                <!-- Add more instructions as needed -->
-            </ul>
-       </div>
+      <span class="close-button" id="close-button">x</span>
+  </div>
 
 <!--        <video id="video" width="640" height="80" autoplay></video>-->
-        <button id="runTrainingButton">Store 20 images</button>
+        <button id="runTrainingButton" class="button-link">Scan</button><br>
+        <button id="finishScan" class="button-link">Finish</button><br>
+
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script>
@@ -151,7 +77,7 @@
             });
         });
         </script>
-        <button id="finishScan">Finish</button>
+
 
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script>
@@ -167,6 +93,59 @@
 
   </div>
 
-<script src="C:\Users\mandv\PycharmProjects\AutomatedAttendace\ProcterAI\student_registration_system\script.js"></script>
+<!--    <script src="C:\Users\mandv\PycharmProjects\AutomatedAttendace\ProcterAI\student_registration_system\script.js"></script>-->
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+          const instructionsButton = document.getElementById("instructionsButton");
+          const instructionBox = document.getElementById("instruction-box");
+          const closeButton = document.getElementById("close-button");
+
+          instructionsButton.addEventListener("click", function () {
+              instructionBox.style.display = "block";
+          });
+
+          closeButton.addEventListener("click", function () {
+              instructionBox.style.display = "none";
+          });
+      });
+    </script>
+       <form id="registrationForm" action="/student" method="POST">
+
+      <label for="studentName">Name:</label>
+      <input type="text" id="studentName" name="studentName" required><br><br>
+
+      <label for="studentID">Student ID:</label>
+      <input type="text" id="studentID" name="studentID" required><br><br>
+
+      <label for="password">Password:</label>
+      <input type="text" id="password" name="password" required><br><br>
+
+        <button id="saveButton" type="submit" class="button-link save-info">Save Info</button>
+
+
+    </form>
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function() {
+        $('#registrationForm').submit(function(event) {
+            event.preventDefault(); // Prevent the default form submission
+
+            $.ajax({
+                type: 'POST',
+                url: '/student',
+                data: $('#registrationForm').serialize(),
+                success: function(response) {
+                    alert(response.message); // Display success message in an alert
+                }
+            });
+        });
+    });
+</script>
+
+    </div>
+
+</section>
+
 </body>
 </html>

@@ -4,71 +4,34 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Teacher Interface</title>
-  <link rel="stylesheet" href="form.css">
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background-color: #8CAF99;
-    }
-
-    .container {
-      width: 50%;
-      text-align: center;
-    }
-
-    h1 {
-      color: #333;
-      margin-bottom: 70px
-    }
-
-    .instruction {
-      margin-bottom: 20px;
-    }
-
-    .button-container {
-      display: flex;
-      justify-content: center;
-    }
-
-    .action-button {
-      padding: 10px 20px;
-      margin: 10px;
-      font-size: 16px;
-      cursor: pointer;
-      background-color: #1CAF10;
-      color: white;
-      border: none;
-      border-radius: 4px;
-    }
-
-    .action-button:hover {
-      background-color: #45a049;
-    }
-  </style>
+  <link rel="stylesheet" href="{{ url_for('static', filename='form.css') }}">
+{% include 'header.html' %}
 </head>
 <body>
-  <div class="container">
+  <!-- Animated Wave Background  -->
+  <div class="ocean">
+    <div class="wave"></div>
+    <div class="wave"></div>
+</div>
+<div class="container" id="container">
+  <div class="form-container">
      <h1>Teacher Interface</h1>
     <div class="instruction">
       <p>To start taking the attendance</p>
       <p><strong>Click below!</strong></p>
     </div>
+    <div class="form-container">
     <div class="button-container">
-      <button class="action-button" id="markAttendanceButton">Mark Attendance</button>
-    </div>
+      <button class="button-link" id="markAttendanceButton">Mark Attendance</button>
+    </div></div>
     <div class="instruction">
       <p>To view the attendance of students</p>
       <p><strong>Click below!</strong></p>
     </div>
+    <div class="form-container">
     <div class="button-container">
-<!--      <button class="action-button" id="viewPresentUsersButton">View Present Users</button>-->
-      <a href="{{ url_for('present') }}" style="color: white; padding: 10px 20px; background-color: #1CAF10; border-radius: 4px;">View Present Users</a>
-    </div>
+      <a href="{{ url_for('present') }}"class="button-link" >View Present Users</a>
+    </div></div>
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>

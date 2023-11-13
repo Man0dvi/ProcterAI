@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Header</title>
+    <style>
+        /* CSS for the navigation bar */
+        .top-nav {
+            background-color: #6ca7c2; /* Set the background color */
+            color: white; /* Set the text color */
+            padding: 10px;
+            position: fixed; /* Set the navigation bar fixed at the top */
+            width: 100%; /* Make the navigation bar span the entire width */
+            top: 0; /* Position it at the top */
+            height: 30px
+        }
+
+        .top-nav ul {
+            list-style: none;
+            margin-top: 8px;
+            font-size: larger;
+            padding: 0;
+        }
+
+        .top-nav ul li {
+            display: inline;
+        }
+
+        .top-nav ul li a {
+            color: white;
+            text-decoration: none;
+            padding: 8px 12px;
+        }
+
+        .top-nav ul li a:hover {
+            background-color: #6ca7c2;
+        }
+
+        /* Additional styling to offset content below the fixed nav bar */
+        body {
+            padding-top: 40px; /* Add padding to the top of the body to prevent content from being hidden behind the fixed navigation bar */
+        }
+    </style>
+</head>
+<body>
+
+<nav class="top-nav">
+    <ul>
+        <li><a href="{{ url_for('start_interface') }}">Home</a></li>
+
+        <!-- Add more navigation items if needed -->
+    </ul>
+</nav>
+
+</body>
+</html>

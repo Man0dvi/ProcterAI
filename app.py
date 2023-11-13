@@ -8,6 +8,10 @@ from mysql.connector import Error
 import os
 from datetime import datetime
 import pickle
+from datetime import date, timedelta
+from flask import jsonify
+
+
 
 app = Flask(__name__)
 app.secret_key = 'key'
@@ -83,9 +87,11 @@ def insert_recognized_user(connection,recognized_user):
         if result is not None:
             student_name = result[0]
             student_id_number = result[1]
-            current_date = datetime.now().strftime('%Y-%m-%d')
-            insert_query = "INSERT INTO recognized_users (user_id, student_name, student_id_number, recognition_date) VALUES (%s, %s, %s, %s)"
-            cursor.execute(insert_query, (recognized_user, student_name, student_id_number, current_date))
+            #current_date = datetime.now().strftime('%Y-%m-%d')
+            recognition_date = datetime.now().strftime('%Y-%m-%d')  # Get the current date
+            recognition_time = datetime.now().strftime('%H:%M:%S')  # Get the current time
+            insert_query = "INSERT INTO recognized_users (user_id, student_name, student_id_number, recognition_date, recognition_time) VALUES (%s, %s, %s, %s, %s)"
+            cursor.execute(insert_query, (recognized_user, student_name, student_id_number, recognition_date, recognition_time))
             connection.commit()
             print("Recognized user data inserted successfully.")
         else:
@@ -108,7 +114,7 @@ def register_student():
         cursor.execute("INSERT INTO students (name, student_id_number, password) VALUES (%s, %s, %s)", (student_name, student_id, password))
         db_connection.commit()
 
-        return "Student registered successfully!"
+        return jsonify({'message': 'Student registered successfully!'})
 
     return render_template('register.html')
 
@@ -193,6 +199,27 @@ def finish():
 def teacher_interface():
     return render_template('teacher.html')
 
+
+@app.route('/teacher_login', methods=['GET', 'POST'])
+def teacher_login():
+    if request.method == 'POST':
+        # Get the username and password from the form
+        username = request.form['username']
+        password = request.form['password']
+
+        # Check if the entered credentials exist in the teacher table
+        cursor.execute("SELECT * FROM teachers WHERE username = %s AND password = %s", (username, password))
+        teacher = cursor.fetchone()
+
+        if teacher:
+            # Credentials are valid, set a session variable to remember the teacher
+            session['teacher_id'] = teacher[0]  # Store the teacher's ID in the session
+            return redirect(url_for('teacher_interface'))
+        else:
+            # Invalid credentials, display a message or redirect to the signup page
+            return "Invalid credentials. Please try again."
+
+    return render_template('TeacherLogin.html')
 # Route for marking attendance
 @app.route('/mark_attendance', methods=['POST'])
 def mark_attendance():
@@ -230,10 +257,28 @@ def mark_attendance():
 @app.route('/present', methods=['GET'])
 def present():
     try:
-        cursor = db_connection.cursor()
-        cursor.execute("SELECT id, student_name, student_id_number, recognition_date FROM recognized_users")
-        recognized_users = cursor.fetchall()
-        return render_template('Present.html', recognized_users=recognized_users)
+        selected_range = int(request.args.get('range', 0))
+
+        if selected_range > 0:
+            end_date = date.today()
+            start_date = end_date - timedelta(days=selected_range)
+
+            cursor = db_connection.cursor()
+            cursor.execute(
+                "SELECT id, student_name, student_id_number, recognition_date, recognition_time FROM recognized_users "
+                "WHERE DATE(recognition_date) BETWEEN %s AND %s",
+                (start_date, end_date))
+            recognized_users = cursor.fetchall()
+        else:
+            today_date = date.today()
+            cursor = db_connection.cursor()
+            cursor.execute(
+                "SELECT id, student_name, student_id_number, recognition_date, recognition_time FROM recognized_users "
+                "WHERE DATE(recognition_date) = %s",
+                (today_date,))
+            recognized_users = cursor.fetchall()
+
+        return render_template('present.html', recognized_users=recognized_users)
     except Error as e:
         print("Error:", e)
         return "Error retrieving recognized users."
@@ -263,6 +308,7 @@ def login():
 
     return render_template('login.html')
 
+
 @app.route('/my_attendance')
 def my_attendance():
     student_id = session.get('student_id')  # Retrieve the student's ID from the session
@@ -271,21 +317,17 @@ def my_attendance():
         student_data = fetch_student_data(student_id)
 
         if student_data:
-            cursor = db_connection.cursor()
-            cursor.execute("SELECT recognition_date FROM recognized_users WHERE user_id = %s", (student_id,))
-            attendance_data = cursor.fetchall()
-
-            return render_template('MyAttendance.html', student=student_data, attendance_data=attendance_data)
+            return render_template('MyAttendance.html', student_data=student_data)
         else:
-            return "Student data not found."
+            return "You were absent"
     else:
         return "You are not logged in. Please sign in first."
 
 def fetch_student_data(student_id):
     try:
         cursor = db_connection.cursor()
-        cursor.execute("SELECT * FROM recognized_users WHERE user_id = %s", (student_id,))
-        student_data = cursor.fetchone()
+        cursor.execute("SELECT id, student_name, student_id_number, recognition_date, recognition_time FROM recognized_users WHERE user_id = %s", (student_id,))
+        student_data = cursor.fetchall()
 
         if student_data:
             return student_data

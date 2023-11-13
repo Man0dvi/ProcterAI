@@ -3,27 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student login</title>
+    <title>Teacher Login</title>
+    <!-- Include an external CSS file named "form.css" -->
     <link rel="stylesheet" href="{{ url_for('static', filename='form.css') }}">
 {% include 'header.html' %}
 </head>
 <body>
-    <!-- Animated Wave Background  -->
+    <!-- Animated Wave Background -->
     <div class="ocean">
         <div class="wave"></div>
         <div class="wave"></div>
     </div>
     <!-- Log In Form Section -->
+    <div class="container" id="container">
+        <div class="form-container">
     <section>
-        <div class="container" id="container">
-            <div class="form-container">
-        <form action="/login" method="post">
-            <input type="text" name="student_id_number" placeholder="Student ID Number" required><br><br>
+        <form action="/teacher_login" method="post">
+            <input type="text" name="username" placeholder="Username" required><br><br>
             <input type="password" name="password" placeholder="Password" required><br><br>
             <button type="submit" class="button-link">Login</button>
         </form>
-        </div></div>
     </section>
+    </div></div>
 
     {% with messages = get_flashed_messages() %}
     {% if messages %}
@@ -34,7 +35,5 @@
     </ul>
     {% endif %}
     {% endwith %}
-
-<!--    <script src="form.js"></script>-->
 </body>
 </html>
